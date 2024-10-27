@@ -1,0 +1,51 @@
+-- Crear tabla Books
+CREATE TABLE Books (
+    BookID INT PRIMARY KEY IDENTITY(1,1),
+    Title NVARCHAR(100),
+    Author NVARCHAR(100),
+    PublishedYear INT,
+    Genre NVARCHAR(50)
+);
+
+-- Crear tabla Members
+CREATE TABLE Members (
+    MemberID INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(100),
+    Email NVARCHAR(100),
+    JoinDate DATE
+);
+
+-- Crear tabla Loans
+CREATE TABLE Loans (
+    LoanID INT PRIMARY KEY IDENTITY(1,1),
+    MemberID INT,
+    BookID INT,
+    LoanDate DATE,
+    ReturnDate DATE,
+    FOREIGN KEY (MemberID) REFERENCES Members(MemberID),
+    FOREIGN KEY (BookID) REFERENCES Books(BookID)
+);
+
+INSERT INTO Books (Title, Author, PublishedYear, Genre) VALUES
+('1984', 'George Orwell', 1949, 'Dystopian'),
+('To Kill a Mockingbird', 'Harper Lee', 1960, 'Fiction'),
+('The Great Gatsby', 'F. Scott Fitzgerald', 1925, 'Classic'),
+('Moby Dick', 'Herman Melville', 1851, 'Adventure'),
+('War and Peace', 'Leo Tolstoy', 1869, 'Historical Fiction');
+
+INSERT INTO Members (Name, Email, JoinDate) VALUES
+('Alice Smith', 'alice@example.com', '2023-01-15'),
+('Bob Johnson', 'bob@example.com', '2023-02-20'),
+('Charlie Brown', 'charlie@example.com', '2023-03-10'),
+('Diana Prince', 'diana@example.com', '2023-04-05'),
+('Edward Elric', 'edward@example.com', '2023-05-12');
+
+INSERT INTO Loans (MemberID, BookID, LoanDate, ReturnDate) VALUES
+(1, 1, '2023-06-01', NULL),
+(1, 2, '2023-06-10', NULL),
+(2, 3, '2023-06-15', NULL),
+(3, 4, '2023-06-20', '2023-07-01'),
+(4, 5, '2023-06-25', NULL);
+
+
+
