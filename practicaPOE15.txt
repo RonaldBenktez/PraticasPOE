@@ -1,0 +1,174 @@
+CREAR BASE DE DATOS StudentAdministratorDB
+IR
+
+UTILICE StudentAdministratorDB
+IR
+
+CREAR TABLA carrera(
+	idCarrera INT CLAVE PRIMARIA IDENTIDAD (1, 1) NO NULO,
+	nombreCarrera NVARCHAR(100) NO NULO,
+	DescripciónCarrera NVARCHAR(255) NOT NULL
+)
+IR
+
+CREAR TABLA estudiante(
+	idEstudiante INT CLAVE PRIMARIA IDENTIDAD(1, 1) NO NULO,
+	nombreEstudiante NVARCHAR(50) NO NULO,
+	apellidoEstudiante NVARCHAR(50) NOT NULL,
+	idCareerStudent INT REFERENCIAS CLAVE EXTERNA carrera(idCareer) NO NULO
+)
+IR
+
+CREAR TABLA roles (
+	idRol INT CLAVE PRIMARIA IDENTIDAD(1, 1),
+	nombreRol VARCHAR(20),
+	DescripciónRol VARCHAR(50)
+)
+IR
+
+CREAR TABLA usuarios (
+	idUser INT CLAVE PRIMARIA IDENTIDAD(1, 1),
+	nombreUsuario VARCHAR(20),
+	nombre de usuarioUsuario VARCHAR(20),
+	contraseñaUsuario VARCHAR(20),
+	idRolUser INT REFERENCIAS DE CLAVE EXTERNA roles(idRol)
+)
+IR
+
+INSERTAR EN la carrera
+VALORES ('Ingenieria en Desarrollo de Software', 'Carrera de Ingeniería en Desarrollo de Software')
+IR
+
+INSERTAR EN LOS VALORES DEL ESTUDIANTE ('Williams', 'Rodríguez', 1)
+IR
+
+INSERTAR EN roles
+VALORES ('administrador', 'Rol con mayor privilegio'),
+	   ('maestro', 'usuario común del sistema')
+IR
+
+INSERTAR EN usuarios
+VALORES ('Administrador', 'admin', 'admin', 1),
+	   ('Williams', 'wrodriguez', '123', 2)
+IR
+
+SELECCIONE st.idEstudiante, st.nombreEstudiante, st.apellidoEstudiante, st.idCareerStudent, ca.nameCareer
+DESDE estudiante st
+UNIÓN INTERNA carrera ca ON st.idCareerStudent = ca.idCareer
+DONDE nombreEstudiante como '%%'
+IR
+
+SELECCIONAR * DE carrera
+DONDE nombreCarrera ME GUSTA '%%'
+IR
+
+/*-----------------------------------------------PROCEDIMIENTOS DE ALMACENAMIENTO -----------------------------------------------------*/
+
+---------------------- <CARRERA - PROCEDIMIENTO DE ALMACENAMIENTO> --------------------------
+
+----- SELECCIONAR -----
+CREAR O MODIFICAR PROCEDIMIENTO sp_SelectCareer
+(
+	@SearchCareerVARCHAR(50)
+)
+COMO
+COMENZAR
+	SELECCIONAR * DE carrera DONDE nombreCarrera ME GUSTA @BuscarCarrera
+FIN
+IR
+
+----- INSERTAR -----
+CREAR O MODIFICAR PROCEDIMIENTO sp_InsertCareer
+(
+	@nombreCarrera NVARCHAR(100),
+	@descriptionCareer NVARCHAR(255)
+)
+COMO
+COMENZAR
+	INSERTAR EN VALORES de carrera (@nameCareer, @descriptionCareer)
+FIN
+IR
+
+----- ACTUALIZAR -----
+CREAR O MODIFICAR PROCEDIMIENTO sp_UpdateCareer
+(
+	@idCareer INT,
+	@nombreCarrera NVARCHAR(100),
+	@descriptionCareer NVARCHAR(255)
+)
+COMO
+COMENZAR
+	ACTUALIZAR carrera
+	ESTABLECER nombreCarrera = @nombreCarrera, descripciónCarrera = @descriptionCarrera
+	DONDE idCarrera = @idCarrera
+FIN
+IR
+
+----- BORRAR -----
+CREAR O MODIFICAR PROCEDIMIENTO sp_DeleteCareer
+(
+	@idCareer INT
+)
+COMO
+COMENZAR
+	ELIMINAR DE carrera DONDE idCareer = @idCareer
+FIN
+IR
+---------------------- <ESTUDIANTE - PROCEDIMIENTO DE ALMACENAMIENTO> --------------------------
+
+----- SELECCIONAR -----
+CREAR O MODIFICAR PROCEDIMIENTO sp_SelectStudent
+(
+	@Buscar VARCHAR(20)
+)
+COMO
+COMENZAR
+	SELECCIONE st.idEstudiante, st.nombreEstudiante, st.apellidoEstudiante, st.idCareerStudent, ca.nameCareer
+	DESDE estudiante st
+	UNIÓN INTERNA carrera ca ON st.idCareerStudent = ca.idCareer
+	DONDE st.nameEstudiante ME GUSTA @Buscar
+FIN
+IR
+
+----- INSERTAR -----
+CREAR O MODIFICAR PROCEDIMIENTO sp_InsertStudent
+(
+	@nombreEstudiante NVARCHAR(50),
+	@apellidoEstudiante NVARCHAR(50),
+	@idCareerStudent INT
+)
+COMO
+COMENZAR
+	INSERTAR EN estudiante (nombreEstudiante, apellidoEstudiante, idEstudianteCarrera)
+	VALORES (@nombreEstudiante, @apellidoEstudiante, @idEstudianteCarrera)
+FIN
+IR
+
+----- ACTUALIZAR -----
+CREAR O MODIFICAR PROCEDIMIENTO sp_UpdateStudent
+(
+	@idEstudiante INT,
+	@nombreEstudiante NVARCHAR(50),
+	@apellidoEstudiante NVARCHAR(50),
+	@idCareerStudent INT
+)
+COMO
+COMENZAR
+	ACTUALIZACIÓN estudiante
+	SET nombreEstudiante = @nombreEstudiante,
+		apellidoEstudiante = @apellidoEstudiante,
+		idEstudianteDeCarrera = @idEstudianteDeCarrera
+	DONDE idEstudiante = @idEstudiante
+FIN
+IR
+
+----- BORRAR -----
+CREAR O MODIFICAR PROCEDIMIENTO sp_DeleteStudent
+(
+	@idEstudiante INT
+)
+COMO
+COMENZAR
+	ELIMINAR DE estudiante DONDE idEstudiante = @idEstudiante
+FIN
+IR
